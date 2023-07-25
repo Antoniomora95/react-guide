@@ -16,23 +16,13 @@
     
     <script src="https://www.unpkg.com/react@16.7.0/umd/react.production.min.js"></script>
     <script src="https://www.unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js"></script>
-    <script type="text/javascript">
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
         const rootElement = document.getElementById('root');
-        const element = React.createElement('div', {
-            children: [
-                '1st text (children) for the div element',
-                React.createElement('span', {
-                    children: 'Text for the span element (children)',
-                    class: 'spanClass'
-                })
-            ],
-            className: 'container'
-        });
-        ReactDOM.render(element, rootElement);
-        console.log(element);
-        // const element = document.createElement('div');
-        // element.textContent = 'Hello world';
-        // element.className = 'container';
-        // rootElement.appendChild(element);
+        const span = <span className="spanClass">Text for the span element (element inside div)</span>
+        const elementJSX = <div className="container">1st text (children) for the div element{span}</div>
+
+        ReactDOM.render(elementJSX, rootElement);
+        console.log(elementJSX);
     </script>
 </body>
