@@ -1,0 +1,26 @@
+<body>
+    <div id="root"></div>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://www.unpkg.com/react@16.7.0/umd/react.production.min.js"></script>
+    <script src="https://www.unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const rootElement = document.getElementById('root');
+        const className = 'container';
+        const children = '1st text (children) for the div element';
+
+        const props = {
+            className,
+            children
+        };
+
+        // I had not seen this before, react api merges the props, and the object props, using
+        // a function called extends, really interesting, and in this case the class
+        // overriden is ignored, because it is before the props object(which contains the same prop), and this is basically
+        // how javascript works, and how you would normally merge objects.
+        const elementJSX = <div id="app-container" className="overriden"  {...props}  />
+
+        ReactDOM.render(elementJSX, rootElement);
+        console.log(elementJSX);
+    </script>
+</body>
