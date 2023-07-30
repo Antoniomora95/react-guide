@@ -1,0 +1,39 @@
+<body>
+    <div id="root"></div>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://www.unpkg.com/react@16.7.0/umd/react.production.min.js"></script>
+    <script src="https://www.unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        // createElement receives 3 properties: type, props, and children
+        const props = { className: 'spanClass' };
+        const helloElement = React.createElement('span', props, 'Hello');
+        const worldElement = React.createElement('span', props, 'World');
+
+
+        const fragmentJsx = (
+            <React.Fragment>
+                <span className='spanJsx'>Hello</span>
+                <span className='spanJsx'>from the jsx world</span>
+            </React.Fragment>
+        );
+        const simplifiedFragment = (
+            <>
+                <span className='spanSimplified'>Hello</span>
+                <span className='spanSimplified'>from a simplified version of React.Fragment</span>
+            </>
+        );
+
+        const fragment = React.createElement(
+            React.Fragment,
+            null,
+            helloElement,
+            React.createElement('span', props, ', '),
+            worldElement,
+            fragmentJsx,
+            simplifiedFragment
+        );
+        ReactDOM.render(fragment, document.getElementById('root'));
+        console.log(fragment);
+    </script>
+</body>
