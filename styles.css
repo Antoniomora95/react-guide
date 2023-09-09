@@ -1,9 +1,18 @@
-body{
-    margin: 1em;
+body {
+    color:seashell;
 }
 .container {
+    padding: 1em;
     font-size: 3em;
     background-color:lightseagreen;
+}
+.message {
+    padding: 1em;
+    background-color:chocolate;
+    margin-bottom: .5em;
+}
+.message:last-child{
+    margin-bottom: 0;
 }
 .spanClass {
     padding: 1em;

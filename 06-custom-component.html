@@ -1,0 +1,22 @@
+<body>
+    <div id="root"></div>
+    <link rel="stylesheet" href="./styles.css">
+
+    <script src="https://www.unpkg.com/react@16.7.0/umd/react.production.min.js"></script>
+    <script src="https://www.unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+
+        const Message = ({children}) => (<div className="message">{children}</div>);
+        const Message2 = ({message}) => (<div className="message">{message}</div>);
+        const element = (
+            <div className="container">
+               <Message>Hello Juan, via children</Message>
+               <Message2 message="Hello Jose, via message prop"></Message2>
+            </div>
+        );
+
+        ReactDOM.render(element, document.getElementById("root"));
+        console.log(element);
+    </script>
+</body>
