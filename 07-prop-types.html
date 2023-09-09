@@ -1,0 +1,47 @@
+<body>
+    <div id="root"></div>
+    <link rel="stylesheet" href="./styles.css">
+
+    <script src="https://www.unpkg.com/react@16.7.0/umd/react.production.min.js"></script>
+    <script src="https://www.unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+
+        const ChapterMessage = ({ children }) => {
+            return (
+                <section className="chapter-content">
+                    {children}
+                </section>
+            )
+        }
+
+        const content = (
+            <ChapterMessage>
+                When you start creating custom function components, you are gonna have people using those function components,
+                and they may not use them quite right, for example here we have the SayHello component that accepts firstName,
+                and lastName props, and expecting to be able render those out, but the way it is being used, we pass firstName as false
+                , but we are not providing the lastName at all, and the end result is not exactly what we are looking for, the React team
+                has developed a package called PropTypes, that allows us to add runtime validation of the props that are passed to your components
+            </ChapterMessage>
+        );
+
+        const SayHello = ({ firstName, lastName }) => {
+            return (
+                <div className="message">
+                    Hello {firstName} {lastName}!
+                </div>
+            )
+        };
+
+        const sayHello = <SayHello firstName={false} />
+
+        const root = React.createElement(
+            'span',
+            null,
+            content,
+            sayHello
+        );
+
+        ReactDOM.render(root, document.getElementById("root"));
+    </script>
+</body>

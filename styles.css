@@ -6,6 +6,16 @@ body {
     font-size: 3em;
     background-color:lightseagreen;
 }
+.chapter-content {
+    font-size: 1em;
+    color: black;
+    font-weight: lighter;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 1em;
+    background-color:darkseagreen;
+    margin-bottom: 0.5em;
+    text-justify:inter-word;
+}
 .message {
     padding: 1em;
     background-color:chocolate;
