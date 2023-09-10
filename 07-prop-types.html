@@ -2,9 +2,9 @@
     <div id="root"></div>
     <link rel="stylesheet" href="./styles.css">
 
-    <script src="https://www.unpkg.com/react@16.7.0/umd/react.production.min.js"></script>
-    <script src="https://www.unpkg.com/react-dom@16.7.0/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://www.unpkg.com/react@16.12.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
     <script type="text/babel">
 
         const ChapterMessage = ({ children }) => {
@@ -15,17 +15,7 @@
             )
         }
 
-        const content = (
-            <ChapterMessage>
-                When you start creating custom function components, you are gonna have people using those function components,
-                and they may not use them quite right, for example here we have the SayHello component that accepts firstName,
-                and lastName props, and expecting to be able render those out, but the way it is being used, we pass firstName as false
-                , but we are not providing the lastName at all, and the end result is not exactly what we are looking for, the React team
-                has developed a package called PropTypes, that allows us to add runtime validation of the props that are passed to your components
-            </ChapterMessage>
-        );
-
-        const SayHello = ({ firstName, lastName }) => {
+        function SayHello ({ firstName, lastName }) {
             return (
                 <div className="message">
                     Hello {firstName} {lastName}!
@@ -33,13 +23,49 @@
             )
         };
 
-        const sayHello = <SayHello firstName={false} />
+        const PropTypes = {
+            string(props, propName, componentName) {
+                const prop = props[propName];
+                if (typeof prop !== 'string') {
+                    return new Error(`Hey, the component ${componentName} needs the prop ${propName} to be
+                    a string but you passed a ${typeof prop}`);
+                }
+                if (prop.length < 5) {
+                    return new Error(`Hey, The prop ${propName} must have a length of 5 or more characters`);
+                }
+            }
+        }
+
+        // react support feature called prop-types
+        SayHello.propTypes = {
+            firstName: PropTypes.string,
+            lastName: PropTypes.string
+        }
+
+        const chapterMessage = (
+            <ChapterMessage>
+                When you start creating custom function components, you are gonna have people using those function components,
+                and they may not use them quite right, for example here we have the SayHello component that accepts firstName,
+                and lastName props, and expecting to be able render those out, but the way it is being used, we pass firstName as false
+                , but we are not providing the lastName at all, and the end result is not exactly what we are looking for, the React team
+                has developed a package called PropTypes, that allows us to add runtime validation of the props that are passed to your components.
+                In this case we are going to build the validations ourselves.
+                <br/>
+                <br/>
+                One more thing, I was not able to make SayHello.propTypes work at the beginning, then I found out it was because
+                I was using the production version of react, I replaced it with development.
+            </ChapterMessage>
+        );
+
+        const sayHello = <SayHello firstName={"Juls"} lastName={"Jose"} />
+        const sayHelloValid = <SayHello firstName={"Antonio"} lastName={"Mora"} />
 
         const root = React.createElement(
             'span',
             null,
-            content,
-            sayHello
+            chapterMessage,
+            sayHello,
+            sayHelloValid
         );
 
         ReactDOM.render(root, document.getElementById("root"));
