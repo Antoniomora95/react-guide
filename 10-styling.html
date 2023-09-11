@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Re render - ReactJS</title>
+</head>
+
+<body>
+
+    <div id="root"></div>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://www.unpkg.com/react@16.12.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+
+    <script type="text/babel">
+        const ChapterMessage = ({ children }) => {
+            return (
+                <section className="chapter-content">
+                    {children}
+                </section>
+            )
+        }
+        const chapterMessage = (
+            <ChapterMessage>
+                ... styling
+            </ChapterMessage>
+        );
+
+        const Box = ({ size = '', style, ...rest }) => {
+            const sizeClassName = size ? `box--${size}` : '';
+            return (
+                <div
+                    className={`box ${sizeClassName}`}
+                    style={{ fontStyle: 'italic', ...style }}
+                    {...rest}
+                />
+            );
+        };
+
+        const element = (
+            <div>
+                {chapterMessage}
+                <Box size="small" style={{ backgroundColor: 'lightblue' }}>small lightblue box</Box>
+                <Box size="medium" style={{ backgroundColor: 'pink' }}>medium pink box</Box>
+                <Box size="large" style={{ backgroundColor: 'orange' }}>large orange box</Box>
+            </div>
+        )
+        ReactDOM.render(element, document.getElementById("root"));
+    </script>
+</body>
+
+</html>
