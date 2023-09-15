@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Re render - ReactJS</title>
+</head>
+
+<body>
+
+    <div id="root"></div>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://www.unpkg.com/react@16.12.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+
+    <script type="text/babel">
+        const state = { eventCount: 0, username: 'Antonio' }
+
+        function handleClick(){
+            setState(({eventCount: state.eventCount+1}));
+        }
+        function handleChange(event){
+            setState(({username: event.target.value}));
+        }
+
+        function App() {
+            return (
+                <div>
+                    <h3>There have been {state.eventCount} events</h3>
+
+                    <button onClick={handleClick}>Click Me</button>
+
+                    <h4>You typed {state.username}</h4>
+
+                    <input onChange={handleChange}/>
+                </div>
+            );
+        }
+
+        function setState(newState) {
+            Object.assign(state, newState);
+            renderApp();
+        }
+
+        function renderApp() {
+            ReactDOM.render(<App />, document.getElementById("root"));
+        }
+
+        renderApp();
+    </script>
+</body>
+
+</html>
