@@ -17,18 +17,23 @@
 
     <script type="text/babel">
         function Greeting() {
-            const [name, setName] = React.useState('');
+            const getItemSafely = () => window.localStorage.getItem('name');
+            const [name, setName] = React.useState(getItemSafely() ?? '');
+            React.useEffect(() => {
+                window.localStorage.setItem('name', name);
+            }, [name]);
             const handleChange = (evt) => {
                 const rawValue = evt.target.value;
-                const nameUppercase = rawValue ? rawValue.toUpperCase() : '';
+                const nameUppercase = rawValue.split(' ')
+                    .map(word => (`${word.substring(0, 1).toUpperCase()}${word.substring(1)}`))
+                    .join(' ');
                 setName(nameUppercase);
             };
             return (
                 <div>
                     <form action="http://127.0.0.1:5500/12-use-state-hook.html">
                         <label htmlFor="name">Name: </label>
-                        <input type="text" name="name" id="name" onChange={handleChange} />
-                        <button type="submit">Submit</button>
+                        <input value={name} type="text" name="name" id="name" onChange={handleChange}/>
                     </form>
                     <h4>
                         {name ? (<strong>Hello {name}</strong>) : (`Please type your name`)}
