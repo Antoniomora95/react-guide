@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Use state hook - ReactJS</title>
+    <title>14 Lazy initialization - ReactJS</title>
 </head>
 
 <body>
@@ -17,8 +17,14 @@
 
     <script type="text/babel">
         function Greeting() {
-            const getItemSafely = () => window.localStorage.getItem('name');
-            const [name, setName] = React.useState(getItemSafely() ?? '');
+            const getItemSafely = () => {
+                // pass a callback to useState, instead of the execution of the callback, this is
+                // lazy initialization, which avoids doing dumb callback execution on each render cycle
+                console.log('lazy initialization');
+                return window.localStorage.getItem('name')?.toLowerCase() ?? '';
+            };
+            const [name, setName] = React.useState(getItemSafely);
+
             React.useEffect(() => {
                 window.localStorage.setItem('name', name);
             }, [name]);
@@ -34,6 +40,7 @@
                     <form action="http://127.0.0.1:5500/12-use-state-hook.html">
                         <label htmlFor="name">Name: </label>
                         <input value={name} type="text" name="name" id="name" onChange={handleChange}/>
+                        <button type="submit">submit</button>
                     </form>
                     <h4>
                         {name ? (<strong>Hello {name}</strong>) : (`Please type your name`)}
