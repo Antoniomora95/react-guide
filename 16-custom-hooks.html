@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16 custom hooks - ReactJS</title>
+</head>
+
+<body>
+
+    <div id="root"></div>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://www.unpkg.com/react@16.12.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+
+    <script type="text/babel">
+        function useLocalStorageState(key, defaultValue = '') {
+            const getItemSafely = () => {
+                return window.localStorage.getItem(key)?.toLowerCase() || defaultValue;
+            };
+
+            // Prefer to pass a callback to useState
+            const [state, setState] = React.useState(getItemSafely);
+
+            React.useEffect(() => {
+                window.localStorage.setItem(key, state);
+            }, [state, key]);
+
+            return [state, setState];
+        }
+
+        function Greeting() {
+            const [userName, setUserName] = useLocalStorageState('name', 'Antonio');
+            const handleChange = (evt) => {
+                const rawValue = evt.target.value;
+                const nameUppercase = rawValue.split(' ')
+                    .map(word => (`${word.substring(0, 1).toUpperCase()}${word.substring(1)}`))
+                    .join(' ');
+                setUserName(nameUppercase);
+            };
+            return (
+                <div>
+                    <form action="http://127.0.0.1:5500/12-use-state-hook.html">
+                        <label htmlFor="name">userName: </label>
+                        <input value={userName} type="text" name="name" id="name" onChange={handleChange}/>
+                        <button type="submit">submit</button>
+                    </form>
+                    <h4>
+                        {userName ? (<strong>Hello {userName}</strong>) : (`Please type your name`)}
+                    </h4>
+                </div>
+            );
+        }
+        ReactDOM.render(<Greeting />, document.getElementById("root"));
+    </script>
+</body>
+
+</html>
