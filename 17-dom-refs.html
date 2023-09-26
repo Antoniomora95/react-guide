@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17 DOM refs - ReactJS</title>
+</head>
+
+<body>
+
+    <div id="root"></div>
+    <link rel="stylesheet" href="./dom-refs.css">
+    <script src="https://www.unpkg.com/react@16.12.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+    <script src="https://unpkg.com/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
+
+    <script type="text/babel">
+        function Tilt({children}) {
+            const tiltRef = React.useRef();
+            React.useEffect(() => {
+                const tiltNode = tiltRef.current;
+                const settings = {
+                    max: 50,
+                    speed: 500,
+                    glare: true,
+                    'max-glare': 0.5
+                }
+                VanillaTilt.init(tiltNode, settings);
+              return () => {
+                console.log('component destroyed');
+                tiltNode.vanillaTilt.destroy();
+              }
+            }, [])
+            
+            return (
+                <div ref={tiltRef} className="tilt-root">
+                    <div className="tilt-child">
+                        {children}
+                    </div>
+                </div>
+            );
+        }
+        function App() {
+            const [showTilt, setShowTilt] = React.useState(true);
+
+            return (
+                <div>
+                    <label
+                        htmlFor="showTilt">
+                        <input
+                            type="checkbox"
+                            name="showTilt"
+                            id="showTilt"
+                            checked={showTilt}
+                            onChange={evt => setShowTilt(evt.target.checked)}
+                        />
+                       {' '}
+                        Show tilt
+                    </label>
+                    {showTilt ? (
+                        <Tilt>
+                            <div className="totally-centered">vanilla-tilt.js</div>
+                        </Tilt>
+                    ): (null)}
+                </div>
+            );
+        }
+        ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+</body>
+
+</html>
