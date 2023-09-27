@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>19 basic forms - ReactJS</title>
+</head>
+
+<body>
+
+  <div id="root"></div>
+  <script src="https://www.unpkg.com/react@16.12.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+
+  <script type="text/babel">
+    function UsernameForm() {
+      const handleSubmit = (event) => {
+        event.preventDefault();
+        const {country, user } = event.target.elements;
+        const values = [country, user].reduce(
+          (values, field) => ({...values, ...{[field.name]: field.value}}),{});
+      }
+      return (
+        <form onSubmit={handleSubmit }>
+          <div>
+            <label htmlFor={"user"}>Username: </label>
+            <input type="text" id="user" name="user" autoComplete="true"/>
+          </div>
+          <div>
+            <label htmlFor={"country"}>Country: </label>
+            <input type="text" id="country" name="country" autoComplete="true"/>
+          </div>
+          <button type="submit">Submit</button>
+        </form>
+      )
+    }
+    function App() {
+      return <UsernameForm />
+    }
+    ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+</body>
+
+</html>
