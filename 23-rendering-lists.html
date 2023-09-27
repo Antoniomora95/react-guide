@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>23 Rendering Lists - ReactJS</title>
+</head>
+
+<body>
+
+  <div id="root"></div>
+  <script src="https://www.unpkg.com/react@16.12.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+
+  <script type="text/babel">
+    function ListInput({ color, ...props }) {
+      const style = {
+        backgroundColor: color,
+        margin: '5px',
+        border: '1px',
+        padding: '3px',
+        color: 'white'
+      };
+
+      return (<input type="text" style={style} {...props} />);
+    }
+    function FocusDemo() {
+      const [items, setItems] = React.useState([
+        { id: 'a', value: 'apple', color: 'red' },
+        { id: 'o', value: 'orange', color: 'orange' },
+        { id: 'g', value: 'grape', color: 'purple' },
+        { id: 'p', value: 'pear', color: 'green' },
+      ]);
+
+      function shuffle(items = []) {
+        let localItems = [...items];
+        let currentIndex = items.length;
+
+        while (currentIndex !== 0) {
+          let randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          let temporalItem = localItems[currentIndex];
+          localItems[currentIndex] = localItems[randomIndex];
+          localItems[randomIndex] = temporalItem;
+        }
+        return localItems;
+      }
+
+      React.useEffect(() => {
+        const interval = setInterval(() => setItems(shuffle(items)), 1000);
+        return () => clearInterval(interval);
+      }, []);
+
+      return (
+        <div style={{ width: "400px" }}>
+          <div>
+            <h1>Without key</h1>
+            {
+              items.map(item => (<ListInput color={item.color} value={item.value} />))
+            }
+          </div>
+
+          <div>
+            <h1>With index as key</h1>
+            {
+              items.map((item, index) => (<ListInput key={index} color={item.color} value={item.value} />))
+            }
+          </div>
+
+          <div>
+            <h1>With a correct key</h1>
+            {
+              items.map(item => (<ListInput key={item.id} color={item.color} value={item.value} />))
+            }
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<FocusDemo />, document.getElementById("root"));
+  </script>
+</body>
+
+</html>
