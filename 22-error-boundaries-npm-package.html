@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>22 Error boundaries - npm package - ReactJS</title>
+</head>
+
+<body>
+
+  <div id="root"></div>
+  <script src="https://www.unpkg.com/react@16.12.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+  <script src="https://unpkg.com/react-error-boundary@1.2.5/dist/umd/react-error-boundary.js"></script>
+
+  <script type="text/babel">
+    const { ErrorBoundary } = ReactErrorBoundary;
+    function ErrorFallback({ error }) {
+      return (
+        <div>
+          <p>Something went wrong...</p>
+          <pre>{error.message}</pre>
+        </div>
+      );
+    }
+    function Bomb() {
+      throw new Error('💥 CABOOM 💥');
+      //setTimeout(() => new Promise((res, rej) => rej('upps there was an error')), 5000)
+    }
+    function App() {
+      const [explode, setExplode] = React.useState(false);
+
+      return (
+        <ErrorBoundary FallbackComponent={({ error }) => <h3>Global - Oh no, there was an error {error.message}</h3>}>
+          <div>
+            <div>
+              <section style={{paddingBottom:'15px'}}>
+                this ErrorBoundary won't work inside event handlers, or async callbacks.
+                it will only handle error that happen whithin a React call stack like render method, or useEffect callback
+              </section>
+              <button onClick={() => setExplode(true)}>💣</button>
+            </div>
+            <div>
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                {explode ? <Bomb /> : 'Push the button!!!'}
+              </ErrorBoundary>
+            </div>
+          </div>
+        </ErrorBoundary>
+      );
+    }
+    ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+</body>
+
+</html>

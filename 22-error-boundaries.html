@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>22 Error boundaries - ReactJS</title>
+</head>
+
+<body>
+
+  <div id="root"></div>
+  <script src="https://www.unpkg.com/react@16.12.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+
+  <script type="text/babel">
+    // ErrorBoundary does not work with functions, need to use class
+    class ErrorBoundary extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          error: null
+        }
+      }
+      static getDerivedStateFromError(error) {
+        return {error};
+      }
+
+      render() {
+        const {error} = this.state;
+
+        if(error) {
+          return <this.props.FallbackComponent error={error}/>
+        }
+        return this.props.children;
+      }
+    }
+    function ErrorFallback({error}) {
+      return(
+        <div>
+          <p>Something went wrong...</p>
+          <pre>{error.message}</pre>
+        </div>
+      );
+    }
+    function Bomb() {
+      // try {
+      //   const err = [1].map(val => val.e.e);
+      //   console.log(err);
+      // } catch (error) {
+      //   return error.toString();
+      // }
+      throw new Error('💥 CABOOM 💥');
+    }
+    function App() {
+      const [explode, setExplode] = React.useState(false);
+
+      return(
+        <div>
+          <div>
+            <button onClick={() => setExplode(true)}>💣</button>
+          </div>
+          <div>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                {explode ? <Bomb /> : 'Push the button!!!'}
+              </ErrorBoundary>
+          </div>
+        </div>
+      );
+    }
+    ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+</body>
+
+</html>
