@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>25-26 http request - ReactJS</title>
+</head>
+
+<body>
+
+  <div id="root"></div>
+  <script src="https://www.unpkg.com/react@16.12.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+
+  <style>
+    .pokemon-card {
+      margin: 10px 5px;
+      background-color: rgb(104, 16, 235);
+      color: white;
+      padding: 5px 1em;
+      box-shadow: 1px solid;
+      box-shadow: 5px 5px 5px gray;
+      border-radius: 10px;
+    }
+    ul {
+      padding: 5px 0px;
+    }
+    .list-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      margin-bottom: 5px;
+    }
+  </style>
+  <script type="text/babel">
+    async function parseResponse(response) {
+      const {status} = response;
+      const {data = null, errors} = await response.json();
+      if (!data) {
+        return {
+          status,
+          pokemon: null
+        }
+      }
+      return {
+        status,
+        pokemon: data.getPokemon
+      }
+    }
+    async function fetchPokemon(pokemon) {
+      const pokemonQuery = `
+      query ($pokemon: PokemonEnum!) {
+        getPokemon(pokemon: $pokemon) {
+          key
+          baseStats {
+            attack
+            defense
+            hp
+            specialattack
+            specialdefense
+            speed
+          }
+          color
+          evolutions {
+            key
+            color
+            species
+          }
+          forme
+          species
+        }
+      }`;
+      const response = await window.fetch('https://graphqlpokemon.favware.tech/v7', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          query: pokemonQuery,
+          variables: { pokemon }
+        })
+      });
+
+      return parseResponse(response);
+    }
+    function EvolutionItem({evolution}) {
+      const {key, color, species} = evolution;
+      return (
+        <li className="list-item">
+          <span className="evolution-sub-item">Key: {key}</span>
+          <span className="evolution-sub-item">Color: {color}</span>
+          <span className="evolution-sub-item">Species: {species}</span>
+        </li>
+      )
+    }
+    function Evolutions({children}) {
+      return (
+        <ul>{children}</ul>
+      )
+    }
+    function PokemonCard({pokemon}) {
+      const {key, species, evolutions = []} = pokemon;
+      return(
+        <div className="pokemon-card">
+          <h3>Identifier: {key}</h3>
+          <h5>Species: {species}</h5>
+          <h3>Evolutions</h3>
+          <Evolutions>
+            {
+              evolutions ? evolutions.map(item => (<EvolutionItem key={item.key} evolution={item}/>)) :
+              (<span>No evolutions data</span>)
+            }
+
+          </Evolutions>
+        </div>
+      );
+    }
+    function PokemonInfo({ pokemonName }) {
+      const [pokemonInfo, setpokemonInfo] = React.useState(null);
+      const [status, setStatus] = React.useState(null);
+      const handleState = (pokemon, status) => {
+        setpokemonInfo(pokemon);
+        setStatus(status !== null ? status.toString() : '');
+      }
+      const getPokemonInfo = async (pokemonName) => {
+        if (!Boolean(pokemonName)) {
+          return
+        }
+        handleState(null, null);
+        const {pokemon, status} = await fetchPokemon(pokemonName);
+        handleState(pokemon, status);
+      }
+
+      React.useEffect(() => {
+        getPokemonInfo(pokemonName);
+        return () => { }
+      }, [pokemonName]);
+
+      return (
+        status?.startsWith('20') ? (
+          <PokemonCard pokemon={pokemonInfo} />
+        ) : status?.startsWith('30') ? (
+          'Unexpected response from API'
+        ) : status?.startsWith('40') ? (
+          'Invalid request'
+        ) : status?.startsWith('50') ? (
+          'Internal Server error'
+        ) : status?.length > 0 ? (
+          'Cannot display the pokemon'
+        ) : (
+          <p>Need to request the pokemon{pokemonName ? ` ${pokemonName}` : '...'}</p>
+        )
+      );
+    }
+    function App() {
+      const [pokemonName, setPokemonName] = React.useState(() => '');
+      const handleSubmit = (event) => {
+        event.preventDefault();
+        const { value } = event.target.pokemonName;
+        setPokemonName(value);
+      }
+
+      return (
+        <div>
+          <div>
+            <form onSubmit={handleSubmit}>
+              <label htmlFor="pokemonName">Pokemon name: </label>
+              <input type="text" name="pokemonName" id="pokemonName" />
+              <button type="submit">Submit</button>
+            </form>
+          </div>
+          <PokemonInfo pokemonName={pokemonName} />
+        </div>
+      );
+    }
+    ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+</body>
+
+</html>
